@@ -146,8 +146,8 @@ Example:
 
 ```
 $ echo "echo 'hello' #this will be ignored!" | ./shellby
-'hello
-'```
+'hello'
+```
 
 ## Operators 🎸
 Shellby specially interprets the following operator characters:
@@ -173,8 +173,8 @@ Example:
 ./shellby: 1: error!: not found
 $ echo "echo 'all good' && echo 'hello'" | ./shellby
 'all good'
-'hello
-'```
+'hello'
+```
 
 ## || - OR logical operator
 command1 || command2: command2 is executed if, and only if, command1 returns a non-zero exit status.
