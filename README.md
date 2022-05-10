@@ -283,10 +283,8 @@ $
 
 # Authors
 
-<ul>
-<li> Excel Nwachukwu <<a href="github.com/trillionclues"></a>></li>
-<li> Samule Chima <<a href="https://github.com/cas1908"></a>></li>
-</ul>
+* Excel Nwachukwu [Excel](github.com/trillionclues)>
+* Samuel Chima <[Samuel](github.com/cas1908)>
 
 # License
 
