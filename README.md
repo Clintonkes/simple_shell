@@ -11,31 +11,39 @@ Shellby is a simple UNIX command language interpreter that reads commands from e
 Usage: shellby [filename]
 
 To invoke shellby, compile all .c files in the repository and run the resulting executable:
-```gcc *.c -o shellby
-./shellby```
+```
+gcc *.c -o shellby
+./shellby
+```
 
 Shellby can be invoked both interactively and non-interactively. If shellby is invoked with standard input not connected to a terminal, it reads and executes received commands in order.
 
 Example:
-```$ echo "echo 'hello'" | ./shellby
+```
+$ echo "echo 'hello'" | ./shellby
 'hello'
-$```
+$
+```
 
 If shellby is invoked with standard input connected to a terminal (determined by <a href="https://linux.die.net/man/3/isatty">isatty<a>(3)), an interactive shell is opened. When executing interactively, shellby displays the prompt $ when it is ready to read a command.
 
 Example:
-```$./shellby
-$```
+```
+$./shellby
+$
+```
 
 Alternatively, if command line arguments are supplied upon invocation, shellby treats the first argument as a file from which to read commands. The supplied file should contain one command per line. Shellby runs each of the commands contained in the file in order before exiting.
 
 Example:
 
-```$ cat test
+```
+$ cat test
 echo 'hello'
 $ ./shellby test
 'hello'
-$```
+$
+```
 
 # Environment 🌳
 Upon invocation, shellby receives and copies the environment of the parent process in which it was executed. This environment is an array of name-value strings describing variables in the format NAME=VALUE. A few key environmental variables are:
@@ -43,25 +51,33 @@ Upon invocation, shellby receives and copies the environment of the parent proce
 # HOME
 The home directory of the current user and the default directory argument for the cd builtin command.
 
-```$ echo "echo $HOME" | ./shellby
-/home/vagrant```
+```
+$ echo "echo $HOME" | ./shellby
+/home/vagrant
+```
 
 # PWD
 The current working directory as set by the cd command.
-```$ echo "echo $PWD" | ./shellby
-/home/vagrant/holberton/simple_shell```
+```
+$ echo "echo $PWD" | ./shellby
+/home/vagrant/holberton/simple_shell
+```
 
 # OLDPWD
 The previous working directory as set by the cd command.
 
-```$ echo "echo $OLDPWD" | ./shellby
-/home/vagrant/holberton/printf```
+```
+$ echo "echo $OLDPWD" | ./shellby
+/home/vagrant/holberton/printf
+```
 
 # PATH
 A colon-separated list of directories in which the shell looks for commands. A null directory name in the path (represented by any of two adjacent colons, an initial colon, or a trailing colon) indicates the current directory.
 
-```$ echo "echo $PATH" | ./shellby
-/home/vagrant/.cargo/bin:/home/vagrant/.local/bin:/home/vagrant/.rbenv/plugins/ruby-build/bin:/home/vagrant/.rbenv/shims:/home/vagrant/.rbenv/bin:/home/vagrant/.nvm/versions/node/v10.15.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/vagrant/.cargo/bin:/home/vagrant/workflow:/home/vagrant/.local/bin```
+```
+$ echo "echo $PATH" | ./shellby
+/home/vagrant/.cargo/bin:/home/vagrant/.local/bin:/home/vagrant/.rbenv/plugins/ruby-build/bin:/home/vagrant/.rbenv/shims:/home/vagrant/.rbenv/bin:/home/vagrant/.nvm/versions/node/v10.15.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/vagrant/.cargo/bin:/home/vagrant/workflow:/home/vagrant/.local/bin
+```
 
 # Command Execution 🔪
 After receiving a command, shellby tokenizes it into words using " " as a delimiter. The first word is considered the command and all remaining words are considered arguments to that command. Shellby then proceeds with the following actions:
@@ -84,10 +100,12 @@ While running in interactive mode, shellby ignores the keyboard input `Ctrl+c`. 
 
 User hits `Ctrl+d` in the third line.
 
-```$ ./shellby
+```
+$ ./shellby
 $ ^C
 $ ^C
-$```
+$
+```
 
 # Variable Replacement 💲
 Shellby interprets the `$` character for variable replacement.
@@ -97,32 +115,40 @@ Shellby interprets the `$` character for variable replacement.
 
 Example:
 
-```$ echo "echo $PWD" | ./shellby
-/home/vagrant/holberton/simple_shell```
+```
+$ echo "echo $PWD" | ./shellby
+/home/vagrant/holberton/simple_shell
+```
 
 # $?
 `?` is substitued with the return value of the last program executed.
 
 Example:
 
-```$ echo "echo $?" | ./shellby
-0```
+```
+$ echo "echo $?" | ./shellby
+0
+```
 
 # $$
 The second `$` is substitued with the current process ID.
 
 Example:
 
-```$ echo "echo $$" | ./shellby
-6494```
+```
+$ echo "echo $$" | ./shellby
+6494
+```
 
 Comments #️⃣
 Shellby ignores all words and characters preceeded by a # character on a line.
 
 Example:
 
-```$ echo "echo 'hello' #this will be ignored!" | ./shellby
-'hello'```
+```
+$ echo "echo 'hello' #this will be ignored!" | ./shellby
+'hello
+'```
 
 # Operators 🎸
 Shellby specially interprets the following operator characters:
@@ -132,28 +158,34 @@ Commands separated by a `;` are executed sequentially.
 
 Example:
 
-```$ echo "echo 'hello' ; echo 'world'" | ./shellby
+```
+$ echo "echo 'hello' ; echo 'world'" | ./shellby
 'hello'
-'world'```
+'world'
+```
 
 # && - AND logical operator
 `command1 && command2`: `command2` is executed if, and only if, `command1` returns an exit status of zero.
 
 Example:
 
-```$ echo "error! && echo 'hello'" | ./shellby
+``
+`$ echo "error! && echo 'hello'" | ./shellby
 ./shellby: 1: error!: not found
 $ echo "echo 'all good' && echo 'hello'" | ./shellby
 'all good'
-'hello'```
+'hello
+'```
 
 # || - OR logical operator
 command1 || command2: command2 is executed if, and only if, command1 returns a non-zero exit status.
 
 Example:
-```$ echo "error! || echo 'but still runs'" | ./shellby
+```
+$ echo "error! || echo 'but still runs'" | ./shellby
 ./shellby: 1: error!: not found
-'but still runs'```
+'but still runs'
+```
 
 The operators && and || have equal precedence, followed by ;.
 
@@ -170,7 +202,8 @@ cd
 <li>The environment variables `PWD` and `OLDPWD` are updated after a change of directory.</li>
 </ul>
 
-```$ ./shellby
+```
+$ ./shellby
 $ pwd
 /home/vagrant/holberton/simple_shell
 $ cd ../
@@ -178,7 +211,8 @@ $ pwd
 /home/vagrant/holberton
 $ cd -
 $ pwd
-/home/vagrant/holberton/simple_shell```
+/home/vagrant/holberton/simple_shell
+```
 
 # alias
 
@@ -192,14 +226,16 @@ $ pwd
 
 Example:
 
-```$ ./shellby
+```
+$ ./shellby
 $ alias show=ls
 $ show
 AUTHORS            builtins_help_2.c  errors.c         linkedlist.c        shell.h       test
 README.md          env_builtins.c     getline.c        locate.c            shellby
 alias_builtins.c   environ.c          helper.c         main.c              split.c
 builtin.c          err_msgs1.c        helpers_2.c      man_1_simple_shell  str_funcs1.c
-builtins_help_1.c  err_msgs2.c        input_helpers.c  proc_file_comm.c    str_funcs2.c```
+builtins_help_1.c  err_msgs2.c        input_helpers.c  proc_file_comm.c    str_funcs2.c
+```
 
 # exit
 
@@ -212,8 +248,10 @@ builtins_help_1.c  err_msgs2.c        input_helpers.c  proc_file_comm.c    str_f
 
 Example:
 
-```$ ./shellby
-$ exit```
+```
+$ ./shellby
+$ exit
+```
 
 ## Authors
 
